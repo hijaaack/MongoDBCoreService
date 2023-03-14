@@ -1,0 +1,175 @@
+﻿{
+  "$schema": "ExtensionSettings.Schema.json",
+  "guid": "9be100bb-7c66-498c-b978-78c86c4e7b7d",
+  "version": "1.0.0.0",
+  "configVersion": "1.0.0.21",
+  "policies": [
+    "StrictPropertyValidation"
+  ],
+  "symbols": {
+    "UpdateDocument": {
+      "description": "Update a document in a collection",
+      "readValue": {
+        "function": true
+      },
+      "writeValue": {
+        "type": "object",
+        "properties": {
+          "collection": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "collection",
+          "data"
+        ]
+      },
+      "hidden": false
+    },
+    "CreateDocument": {
+      "description": "Create a document in a collection",
+      "readValue": {
+        "function": true
+      },
+      "writeValue": {
+        "type": "object",
+        "properties": {
+          "collection": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "collection",
+          "data"
+        ]
+      },
+      "hidden": false
+    },
+    "RemoveDocument": {
+      "description": "Removes a document in a collection",
+      "readValue": {
+        "function": true
+      },
+      "writeValue": {
+        "type": "object",
+        "properties": {
+          "collection": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "collection",
+          "id"
+        ]
+      },
+      "hidden": false
+    },
+    "CreateCollection": {
+      "description": "Create a new collection in a database",
+      "readValue": {
+        "function": true
+      },
+      "writeValue": {
+        "type": "string"
+      },
+      "hidden": false
+    },
+    "CollectionList": {
+      "readValue": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "hidden": false
+    },
+    "AggregationOutputList1": {
+      "readValue": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "hidden": false
+    },
+    "AggregationOutputList2": {
+      "readValue": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "hidden": false
+    },
+    "AggregationOutputList3": {
+      "readValue": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "hidden": false
+    },
+    "SetAggregationPipeline": {
+      "description": "Sets the pipeline for the aggregation method.",
+      "readValue": {
+        "function": true
+      },
+      "writeValue": {
+        "type": "object",
+        "properties": {
+          "collection": {
+            "type": "string"
+          },
+          "data": {
+            "type": "string"
+          },
+          "pipelineId": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "collection",
+          "data",
+          "pipelineId"
+        ]
+      },
+      "hidden": false
+    },
+    "GetAggregationResult": {
+      "description": "Gets the aggregation result in the method callback.",
+      "readValue": {
+        "function": true
+      },
+      "writeValue": {
+        "type": "object",
+        "properties": {
+          "collection": {
+            "type": "string"
+          },
+          "data": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "collection",
+          "data"
+        ]
+      },
+      "hidden": false
+    }
+  }
+}

@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>MongoDBCoreService</id>
+    <version>1.2.3</version>
+    <title>MongoDBCoreService</title>
+    <authors>Jack Borelius</authors>
+    <owners>Beckhoff Automation AB</owners>
+    <license type="file">LICENSE.txt</license>
+    <icon>images/logo.png</icon>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Generic (.NET Core) MongoDB Service for TwinCAT HMI</description>
+    <copyright>Beckhoff Automation AB</copyright>
+    <tags>TwinCAT HMI Server</tags>
+    <dependencies>
+      <group targetFramework="netstandard2.0">
+        <!-- Package dependencies -->
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="LICENSE.txt" target="" />
+    <file src="bin\Debug\Newtonsoft.Json.dll" target="runtimes\any\native\"/>
+    <file src="bin\Debug\Microsoft.Extensions.Logging.Abstractions.dll" target="runtimes\any\native\"/>
+    <file src="bin\Debug\System.Runtime.CompilerServices.Unsafe.dll" target="runtimes\any\native\"/>
+    <file src="bin\Debug\Microsoft.Win32.Registry.dll" target="runtimes\any\native\"/>
+    <file src="bin\Debug\System.Security.AccessControl.dll" target="runtimes\any\native\"/>
+    <file src="bin\Debug\System.Security.Principal.Windows.dll" target="runtimes\any\native\"/>
+    <file src="bin\Debug\MongoDB.Bson.dll" target="runtimes\any\native\"/>
+    <file src="bin\Debug\MongoDB.Libmongocrypt.dll" target="runtimes\any\native\"/>
+    <file src="bin\Debug\DnsClient.dll" target="runtimes\any\native\"/>
+    <file src="bin\Debug\SharpCompress.dll" target="runtimes\any\native\"/>
+    <file src="bin\Debug\Snappier.dll" target="runtimes\any\native\"/>
+    <file src="bin\Debug\ZstdSharp.dll" target="runtimes\any\native\"/>
+    <file src="bin\Debug\MongoDB.Driver.Core.dll" target="runtimes\any\native\"/>
+    <file src="bin\Debug\MongoDB.Driver.dll" target="runtimes\any\native\"/>
+    <file src="bin\Debug\**\MongoDBCoreService.dll" target="runtimes\any\native\"/>
+    <file src="bin\Debug\**\MongoDBCoreService.*.json" target="runtimes\any\native\"/>
+    <file src="images\logo.png" target="images\" />
+  </files>
+</package>

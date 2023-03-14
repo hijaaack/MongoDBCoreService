@@ -1,0 +1,50 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netcoreapp3.1</TargetFramework>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+		<AssemblyName>MongoDBCoreService</AssemblyName>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<Company>JackB</Company>
+		<Description>-.-</Description>
+		<Copyright>Copyright © JackB 2022</Copyright>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<TcHmiExtensionTypes>{165402F8-2FAD-480A-BCE3-D718A6135931}</TcHmiExtensionTypes>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<TcHmiServerApiVersionNumberMajor>2</TcHmiServerApiVersionNumberMajor>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<TcHmiInstallDir>$(registry:HKEY_CURRENT_USER\Software\Beckhoff\TwinCAT3\3.1@InstallDir)</TcHmiInstallDir>
+		<TcHmiInstallDir Condition="'$(TcHmiInstallDir)'==''">$(registry:HKEY_LOCAL_MACHINE\Software\Beckhoff\TwinCAT3\3.1@InstallDir)</TcHmiInstallDir>
+		<TcHmiInstallDir Condition="'$(TcHmiInstallDir)'==''">$(registry:HKEY_LOCAL_MACHINE\Software\Wow6432Node\Beckhoff\TwinCAT3\3.1@InstallDir)</TcHmiInstallDir>
+		<TcHmiEgineeringDir>$(TcHmiInstallDir)..\Functions\TE2000-HMI-Engineering</TcHmiEgineeringDir>
+		<TcHmiMsBuildPath Condition="'$(TcHmiMsBuildPath)' == ''">$(TcHmiEgineeringDir)\MSBuild\</TcHmiMsBuildPath>
+	</PropertyGroup>
+
+	<Import Project="$(TWINCAT3DIR)..\Functions\TE2000-HMI-Engineering\Infrastructure\TcHmiServer\imports\TcHmiServerExtensionCSharp.proj" />
+
+	<PropertyGroup>
+		<DefaultItemExcludes>$(DefaultItemExcludes);___initialBuild_of_this_extension.tmp</DefaultItemExcludes>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<ProjectGuid>9be100bb-7c66-498c-b978-78c86c4e7b7d</ProjectGuid>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="MongoDB.Driver" Version="2.18.0" />
+	  <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+	</ItemGroup>
+
+</Project>
