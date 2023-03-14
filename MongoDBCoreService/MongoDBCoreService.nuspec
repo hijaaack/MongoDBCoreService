@@ -5,12 +5,12 @@
     <version>1.2.3</version>
     <title>MongoDBCoreService</title>
     <authors>Jack Borelius</authors>
-    <owners>Beckhoff Automation AB</owners>
+    <owners>Jack Borelius</owners>
     <license type="file">LICENSE.txt</license>
     <icon>images/logo.png</icon>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Generic (.NET Core) MongoDB Service for TwinCAT HMI</description>
-    <copyright>Beckhoff Automation AB</copyright>
+    <copyright>2023</copyright>
     <tags>TwinCAT HMI Server</tags>
     <dependencies>
       <group targetFramework="netstandard2.0">
