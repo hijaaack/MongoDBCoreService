@@ -11,7 +11,7 @@ namespace MongoDBCoreService.db
 {
     public class MongoDBData
     {
-        #region DECLARATION
+        #region FIELDS
         private readonly MongoClient _mongoClient;
         private readonly IMongoDatabase _db;
         private IMongoCollection<BsonDocument> _collection;
@@ -26,7 +26,7 @@ namespace MongoDBCoreService.db
 
         private List<dynamic> _collectionList;
         private object _collectionListLock = new object();
-        #endregion DECLARATION
+        #endregion FIELDS
 
         #region PROPERTIES
         public List<dynamic> CollectionList
