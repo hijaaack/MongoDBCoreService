@@ -14,7 +14,7 @@ in perpetuity.
 
 ## MongoDBCoreService
 
-Generic (.NET Core) MongoDB Service for TwinCAT HMI.
+Generic (.NET8) MongoDB Service for TwinCAT HMI.
 
 If you want to see a sample HMI-project with this package go [here](https://github.com/hijaaack/TcHmiMongoDBCoreServiceSample)
 
@@ -32,7 +32,7 @@ The package consists of a service configuration window;
 
 License: [TF2200](https://www.beckhoff.com/sv-se/products/automation/twincat/tfxxxx-twincat-3-functions/tf2xxx-tc3-hmi/tf2200.html) is needed in the HMI-Server to be able to use this C# Server Extension.
 
-Visual Studio 2019 or newer is needed to open this .NET Core project. 
+Visual Studio 2022 or newer is needed to open this .NET8 project. 
 
 ## Installation
 
