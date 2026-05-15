@@ -12,9 +12,10 @@
         "Server",
         "Framework",
         "Control",
-        "Application"
+        "Application",
+        "Package"
       ],
-      "description": "Describes if this file targets a server, framework or control file when it is copied inside the hmi project."
+      "description": "Describes if this file targets a server, framework, control or package file when it is copied inside the hmi project."
     },
     "source": {
       "type": "string",

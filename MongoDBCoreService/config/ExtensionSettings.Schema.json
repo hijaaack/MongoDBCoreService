@@ -1,7 +1,16 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "definitions": {
+    "visibility": {
+      "type": "string",
+      "enum": [
+        "AlwaysShow",
+        "AlwaysHide",
+        "HideInEngineering"
+      ],
+      "default": "AlwaysShow"
+    },
     "serverSymbol": {
       "allOf": [
         {
@@ -17,6 +26,38 @@
           }
         }
       ]
+    },
+    "symbolVersionHistory": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "Description of the symbol."
+        },
+        "sample": {
+          "description": "Sample value for the WriteValue. Can be used for documentation.",
+          "type": "object",
+          "properties": {
+            "description": {
+              "description": "A description of this sample."
+            },
+            "value": {
+              "description": "The 'writeValue' for the command."
+            },
+            "filter": {
+              "description": "A filter for the command."
+            },
+            "path": {
+              "description": "A sub-path for the command."
+            },
+            "requestType": {
+              "description": "The request type for the sample request."
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": false
     }
   },
   "properties": {
@@ -28,23 +69,24 @@
       "items": {
         "type": "string",
         "enum": [
-          "StrictPropertyValidation"
-        ],
-        "description": "StrictPropertyValidation: when not set functions without writeValue will accept any input"
-      }
+          "StrictPropertyValidation",
+          "StrictConfigListenerFilter"
+        ]
+      },
+      "description": "StrictPropertyValidation: when not set, functions without writeValue will accept any input\nStrictConfigListenerFilter: when multiple config values are changed at once, pass only those configuration values to the config listener of the corresponding server extension that match the specified filter; otherwise, all changed configuration values are passed to the config listener of the corresponding server extension if any of them matches the specified filter."
     },
     "guid": {
       "type": "string"
     },
     "visibility": {
-      "type": "string",
-      "enum": [
-        "AlwaysShow",
-        "AlwaysHide",
-        "HideInEngineering"
-      ],
-      "default": "AlwaysShow",
-      "description": "Indicates under which circumstances the extension config should be visible."
+      "allOf": [
+        {
+          "$ref": "#/definitions/visibility"
+        },
+        {
+          "description": "Indicates under which circumstances the extension config should be visible."
+        }
+      ]
     },
     "version": {
       "type": "string",
@@ -121,6 +163,24 @@
       },
       "description": "File extensions are used by script extensions."
     },
+    "symbolCategories": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "localization": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "localization"
+        ]
+      }
+    },
     "symbols": {
       "type": "object",
       "additionalProperties": {
@@ -147,21 +207,58 @@
             "$ref": "#/definitions/serverSymbol",
             "description": "Input parameters of the symbol."
           },
-          "automap": {
+          "addSymbol": {
             "type": "boolean",
             "default": true,
             "description": "true to automatically map this symbol."
           },
+          "automap": {
+            "type": "boolean",
+            "default": true,
+            "description": "true to automatically map this symbol. Deprecated, use addSymbol instead."
+          },
           "hidden": {
             "type": "boolean",
             "default": true,
-            "description": "true to hide this symbol in symbol browser and on the configuration page."
+            "description": "[deprecated] true to hide this symbol in symbol browser and on the configuration page."
+          },
+          "visibility": {
+            "allOf": [
+              {
+                "$ref": "#/definitions/visibility"
+              },
+              {
+                "description": "Visibility of the symbol."
+              }
+            ]
+          },
+          "category": {
+            "type": "string",
+            "description": "Can be used to group related symbols."
           },
           "userGroups": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "integer",
+                  "default": 3,
+                  "enum": [
+                    0,
+                    1,
+                    2,
+                    3
+                  ],
+                  "description": "Access level of the symbol for this user group."
+                }
+              }
+            ]
           },
           "access": {
             "type": "integer",
@@ -172,7 +269,7 @@
               2,
               3
             ],
-            "description": "Default access of the symbol."
+            "description": "Default access level of the symbol."
           },
           "doc": {
             "type": "string",
@@ -183,7 +280,32 @@
             "description": "Description of the symbol."
           },
           "sample": {
-            "type": "object"
+            "description": "Sample value for the WriteValue. Can be used for documentation.",
+            "type": "object",
+            "properties": {
+              "description": {
+                "description": "A description of this sample."
+              },
+              "value": {
+                "description": "The 'writeValue' for the command."
+              },
+              "filter": {
+                "description": "A filter for the command."
+              },
+              "path": {
+                "description": "A sub-path for the command."
+              },
+              "requestType": {
+                "description": "The request type for the sample request."
+              }
+            },
+            "additionalProperties": true
+          },
+          "versions": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/definitions/symbolVersionHistory"
+            }
           }
         },
         "additionalProperties": false

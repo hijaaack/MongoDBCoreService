@@ -19,5 +19,6 @@ namespace MongoDBCoreService
         public static readonly uint RemoveDocumentFail = 14;
         public static readonly uint SetAggregationPipelineFail = 15;
         public static readonly uint GetAggregationResultFail = 16;
+        public static readonly uint UpdateDocumentsFail = 17;
     }
 }

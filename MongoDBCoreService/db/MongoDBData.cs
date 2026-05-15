@@ -20,13 +20,28 @@ namespace MongoDBCoreService.db
         private string _pipelineCollection1, _pipelineCollection2, _pipelineCollection3 = null;
 
         private List<dynamic> _aggregationOutputList1, _aggregationOutputList2, _aggregationOutputList3;
-        private object _aggregationOutputListLock1 = new object();
-        private object _aggregationOutputListLock2 = new object();
-        private object _aggregationOutputListLock3 = new object();
+        private object _aggregationOutputListLock1 = new();
+        private object _aggregationOutputListLock2 = new();
+        private object _aggregationOutputListLock3 = new();
 
         private List<dynamic> _collectionList;
-        private object _collectionListLock = new object();
+        private object _collectionListLock = new();
         #endregion FIELDS
+
+        public class BulkUpdateResult
+        {
+            public int RequestedCount { get; set; }
+            public long MatchedCount { get; set; }
+            public long ModifiedCount { get; set; }
+            public List<BulkUpdateError> Errors { get; set; } = [];
+        }
+
+        public class BulkUpdateError
+        {
+            public int Index { get; set; } // index in the input array
+            public int Code { get; set; }
+            public string Message { get; set; }
+        }
 
         #region PROPERTIES
         public List<dynamic> CollectionList
@@ -193,6 +208,64 @@ namespace MongoDBCoreService.db
                 Builders<BsonDocument>.Filter.Eq("_id", id),
                 updateDefinitionSet
             );
+        }
+
+        public async Task<BulkUpdateResult> UpdateDocumentsAsync(string collectionName,string jsonArrayData,bool ordered = false)
+        {
+            var collection = _db.GetCollection<BsonDocument>(collectionName);
+
+            // Parse the JSON array - each element follows the same shape as
+            // the single-document UpdateDocument input: { "_id": "...", ...fields }
+            var jsonArray = (JArray)JsonConvert.DeserializeObject(jsonArrayData);
+
+            var writes = new List<WriteModel<BsonDocument>>(jsonArray.Count);
+
+            foreach (JObject jsonObject in jsonArray)
+            {
+                // Read the _id and parse it to correct type
+                var id = ObjectId.Parse(jsonObject["_id"].Value<string>());
+
+                // Remove _id - not allowed inside $set
+                jsonObject.Property("_id").Remove();
+
+                // Build the $set update from the remaining fields
+                var newJson = JsonConvert.SerializeObject(jsonObject);
+                var updateDefinition = BsonDocument.Parse(@"{'$set':" + newJson + "}");
+
+                var filter = Builders<BsonDocument>.Filter.Eq("_id", id);
+                writes.Add(new UpdateOneModel<BsonDocument>(filter, updateDefinition));
+            }
+
+            var result = new BulkUpdateResult { RequestedCount = writes.Count };
+
+            if (writes.Count == 0)
+                return result;
+
+            try
+            {
+                var bulk = await collection.BulkWriteAsync(
+                    writes,
+                    new BulkWriteOptions { IsOrdered = ordered });
+
+                result.MatchedCount = bulk.MatchedCount;
+                result.ModifiedCount = bulk.ModifiedCount;
+            }
+            catch (MongoBulkWriteException<BsonDocument> ex)
+            {
+                // Partial success is possible when ordered = false
+                result.MatchedCount = ex.Result.MatchedCount;
+                result.ModifiedCount = ex.Result.ModifiedCount;
+                result.Errors = ex.WriteErrors
+                    .Select(e => new BulkUpdateError
+                    {
+                        Index = e.Index,
+                        Code = e.Code,
+                        Message = e.Message
+                    })
+                    .ToList();
+            }
+
+            return result;
         }
 
         public void CreateDocument(string collectionName, string jsonData)

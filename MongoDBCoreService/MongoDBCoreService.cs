@@ -121,6 +121,10 @@ namespace MongoDBCoreService
                                 UpdateDocument(command, e.Context);
                                 break;
 
+                            case "UpdateDocuments":
+                                UpdateDocuments(command, e.Context);
+                                break;
+
                             case "CreateDocument":
                                 CreateDocument(command, e.Context);
                                 break;
@@ -231,6 +235,47 @@ namespace MongoDBCoreService
             }
 
             command.ReadValue = command.WriteValue;
+            return ErrorValue.HMI_SUCCESS;
+        }
+
+        //Update multiple documents in one bulk operation by _id
+        private ErrorValue UpdateDocuments(Command command, Context context)
+        {
+            if (command.WriteValue != null && command.WriteValue.Type == TcHmiSrv.Core.ValueType.Struct)
+            {
+                try
+                {
+                    var writeValue = command.WriteValue;
+                    var collectionName = writeValue["collection"];
+                    var jsonArray = TcHmiJsonSerializer.Serialize(writeValue["data"]);
+
+                    //Bridge the async DB call back to the synchronous request pipeline
+                    var result = _mongoData
+                        .UpdateDocumentsAsync(collectionName, jsonArray)
+                        .GetAwaiter()
+                        .GetResult();
+
+                    //Partial-success aware, only report success if every row matched
+                    command.ExtensionResult = result.Errors.Count == 0
+                        ? MongoDBCoreServiceErrorValue.Success
+                        : MongoDBCoreServiceErrorValue.UpdateDocumentsFail;
+
+                    //Return the bulk result (counts + per-row errors) to the HMI
+                    command.ReadValue = TcHmiJsonSerializer.Serialize(result);
+                }
+                catch (Exception ex)
+                {
+                    command.ExtensionResult = MongoDBCoreServiceErrorValue.UpdateDocumentsFail;
+                    TcHmiAsyncLogger.Send(context, Severity.Error, "ERROR_REQUEST", new string[] { ex.Message });
+                    command.ReadValue = command.WriteValue;
+                }
+            }
+            else
+            {
+                command.ExtensionResult = MongoDBCoreServiceErrorValue.DataWrongTypeOrEmpty;
+                command.ReadValue = command.WriteValue;
+            }
+
             return ErrorValue.HMI_SUCCESS;
         }
 
@@ -386,7 +431,7 @@ namespace MongoDBCoreService
                 command.ExtensionResult = MongoDBCoreServiceErrorValue.DataWrongTypeOrEmpty;
                 command.ReadValue = command.WriteValue;
             }
-          
+
             return ErrorValue.HMI_SUCCESS;
         }
     }
